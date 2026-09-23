@@ -102,7 +102,15 @@ export function computerTools(
       computerPathSchema,
       async ({ path }) => {
         const { name, bytes } = await computer.pdfBytes(owner, path);
-        return files.import(owner, name, bytes, `Computer: ${path}`);
+        const file = await files.import(owner, name, bytes, `Computer: ${path}`);
+        // Signed content URLs work without a session; the app signs links via owner routes.
+        return {
+          id: file.id,
+          name: file.name,
+          size: file.size,
+          pageCount: file.pageCount,
+          fields: file.fields,
+        };
       },
     ),
   ];
